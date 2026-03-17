@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Story of My Garden.🌺🍁</title>
+    <title>Story Of My Garden.🌺🍁</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@300;400;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #fcfaf7;
             --text-color: #2c2c2c;
             --accent-color: #8e7f7f;
-            --alert-bg: rgba(44, 44, 44, 0.85);
         }
 
         * {
@@ -99,14 +98,17 @@
             color: white;
         }
 
+        /* Page 3 - Story Page */
         #page3 {
             display: block;
             text-align: left;
-            overflow-y: auto;
+            overflow-y: auto; /* স্ক্রল এনাবল করা হয়েছে */
             padding: 40px 15px;
-            -webkit-overflow-scrolling: touch;
+            -webkit-overflow-scrolling: touch; /* আইফোনের জন্য স্মুথ স্ক্রল */
+            scroll-behavior: smooth; /* স্মুথ অটো স্ক্রল */
         }
 
+        /* স্ক্রলবার হাইড করার জন্য */
         #page3::-webkit-scrollbar { display: none; }
 
         .typing-container {
@@ -136,51 +138,16 @@
             margin: 20px 0;
         }
 
-        /* কাস্টম পপ-আপ স্টাইল */
-        .custom-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--alert-bg);
-            color: #fff;
-            padding: 20px 30px;
-            border-radius: 12px;
-            text-align: center;
-            z-index: 9999;
-            width: 80%;
-            max-width: 300px;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s ease;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            font-size: 0.95rem;
-            pointer-events: none;
-        }
-
-        .custom-popup.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, -55%);
-        }
-
     </style>
 </head>
 <body>
-
-    <!-- কাস্টম পপ-আপ এলিমেন্ট -->
-    <div id="scrollAlert" class="custom-popup">
-        থামরে বেডি! আগে লিখে নিতে দে।<br>
-        তার পর আরামে পড়বা। এখন পড়ার দরকার নাই।🙂
-    </div>
 
     <audio id="bgMusic" loop>
         <source src="aud.mp3">
     </audio>
 
     <div class="container">
-        <!-- Page 1 -->
+        
         <div id="page1" class="page active">
             <h2>SEPTEMBER 21</h2>
             <div class="line"></div>
@@ -188,7 +155,6 @@
             <button class="btn" onclick="showPage(2)">Click to open</button>
         </div>
 
-        <!-- Page 2 -->
         <div id="page2" class="page">
             <p>বছরের প্রতিটি দিনই সমান, একই রকম।<br>কিন্তু, তার পরও দুই-একটা দিন একটু অসামান্য হয়ে ওঠে।</p>
             <div class="line"></div>
@@ -196,17 +162,22 @@
             <button class="btn" onclick="playMusicAndNext()">Read the story</button>
         </div>
 
-        <!-- Page 3 -->
         <div id="page3" class="page">
             <div id="typewriter" class="typing-container"></div><span id="cursor" class="cursor"></span>
-            <div style="height: 100px;"></div>
+            <!-- নিচে একটু বাড়তি জায়গা রাখা হয়েছে যাতে শেষ লাইন স্ক্রল করে উপরে তোলা যায় -->
+            <div style="height: 200px;"></div>
         </div>
+
     </div>
 
     <script>
         const music = document.getElementById('bgMusic');
-        let isTyping = false;
-        let alertTimeout;
+        const page3 = document.getElementById("page3");
+        const typewriterElement = document.getElementById("typewriter");
+        
+        let i = 0;
+        const speed = 55; 
+        let userHasScrolledUp = false;
 
         function showPage(pageNumber) {
             document.querySelectorAll('.page').forEach(page => {
@@ -221,32 +192,16 @@
             setTimeout(startTyping, 1000);
         }
 
-        // কাস্টম পপ-আপ দেখানোর ফাংশন
-        function showPopup() {
-            const popup = document.getElementById('scrollAlert');
-            popup.classList.add('show');
-            
-            // আগে যদি কোনো টাইমার থাকে সেটা ক্লিয়ার করা
-            clearTimeout(alertTimeout);
-            
-            // ২.৫ সেকেন্ড পর নিজে নিজেই ভ্যানিশ হয়ে যাবে
-            alertTimeout = setTimeout(() => {
-                popup.classList.remove('show');
-            }, 2500);
-        }
-
-        // স্ক্রল করার চেষ্টা করলে পপ-আপ আসবে
-        const page3 = document.getElementById("page3");
-        
-        function handleScrollAttempt(e) {
-            if (isTyping) {
-                e.preventDefault();
-                showPopup();
+        // ইউজার নিজে স্ক্রল করছে কি না তা চেক করার জন্য
+        page3.addEventListener('scroll', () => {
+            // যদি ইউজার নিচ থেকে উপরে স্ক্রল করে, তবে অটো-স্ক্রল সাময়িক বন্ধ হবে
+            const distanceToBottom = page3.scrollHeight - page3.clientHeight - page3.scrollTop;
+            if (distanceToBottom > 100) { 
+                userHasScrolledUp = true;
+            } else {
+                userHasScrolledUp = false;
             }
-        }
-
-        page3.addEventListener('wheel', handleScrollAttempt, { passive: false });
-        page3.addEventListener('touchmove', handleScrollAttempt, { passive: false });
+        });
 
         const storyText = `Hiii!!🙂
 
@@ -291,7 +246,7 @@
 
 সেই ফুল কিন্তু এখন আর প্রকৃতির নেই।
 
-আজ থেকে কিছু বছর আগে, সেই ফুলকে দেখেছিলাম আমি। অনেক পছন্দ হয়ে গেছিল আমার। তার সুবাসে সে আনাকেও পাগল করেছিলো। কি করবো বল? এই ধরনের ফুলের দেখা তো আগে কখনো মেলেনি। দেখেই আমি আবদার করে বসি প্রকৃতির কাছে। সে কোনো মতে দিতে নারাজ। সে-ই বা কি করবে বল? ফুলটা তো তারও খুব প্রিয়। দির্ঘ্য পাঁচ বছর রোজ আবদার করার পর অবশেষে সে তার অতি প্রিয় ফুল আমাকে দিয়ে দিলো।
+আজ থেকে কিছু বছর আগে, সেই ফুলকে দেখেছিলাম আমি। অনেক পছন্দ হয়ে গেছিল আমার। তার সুবাসে সে আনাকেও পাগল করেছিলো। কি করবো বল? এই ধরনের ফুলের দেখা তো আগে কখনো মেলেনি। দেখেই আমি আবদার করে বসি প্রকৃতির কাছে. সে কোনো মতে দিতে নারাজ। সে-ই বা কি করবে বল? ফুলটা তো তারও খুব প্রিয়। দির্ঘ্য পাঁচ বছর রোজ আবদার করার পর অবশেষে সে তার অতি প্রিয় ফুল আমাকে দিয়ে দিলো।
 
 যদিও দেওয়ার আগে অনেক কড়া ভাবে আদেশ দিয়ে দিয়েছে "ফুলে যেন কোনো দাগ না পড়ে"। আমি রাজি হয়ে গেছি।
 
@@ -310,19 +265,18 @@ Happy Birthday🎉💝💙🍫
 
 (প্রথমে ভেবেছিলাম পুরোটা voice note এর মাধমে বলবো।🙂 কিন্তু আমার আবৃতির যেই অবস্থা🤧 পড়ে emotion আসা তো দূর, হয়তো হেসে দিতা🥲 তাই লিখে দিলাম🙂)`;
 
-        let i = 0;
-        const speed = 55; 
-        const typewriterElement = document.getElementById("typewriter");
-
         function startTyping() {
-            isTyping = true;
             if (i < storyText.length) {
                 typewriterElement.textContent += storyText.charAt(i);
                 i++;
-                page3.scrollTop = page3.scrollHeight;
+                
+                // যদি ইউজার নিজে উপরে স্ক্রল না করে থাকে, তবেই অটো-স্ক্রল হবে
+                if (!userHasScrolledUp) {
+                    page3.scrollTop = page3.scrollHeight;
+                }
+
                 setTimeout(startTyping, speed);
             } else {
-                isTyping = false;
                 document.getElementById("cursor").style.display = "none";
             }
         }
