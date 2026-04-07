@@ -104,7 +104,6 @@
             overflow-y: auto;
             padding: 40px 15px;
             -webkit-overflow-scrolling: touch;
-            /* scroll-behavior: smooth; এখানে থাকলে টাইপিং এ সমস্যা হয়, তাই বাদ দেওয়া হয়েছে */
         }
 
         #page3::-webkit-scrollbar { display: none; }
@@ -139,8 +138,14 @@
 </head>
 <body>
 
+    <!-- 3rd Page Audio -->
     <audio id="bgMusic" loop>
         <source src="aud.mp3">
+    </audio>
+
+    <!-- 2nd Page Audio -->
+    <audio id="vceMusic">
+        <source src="vce.mp3">
     </audio>
 
     <div class="container">
@@ -148,7 +153,8 @@
             <h2>SEPTEMBER 21</h2>
             <div class="line"></div>
             <p>"The Day!"</p>
-            <button class="btn" onclick="showPage(2)">Click to open</button>
+            <!-- Changed onclick to goToPage2() -->
+            <button class="btn" onclick="goToPage2()">Click to open</button>
         </div>
 
         <div id="page2" class="page">
@@ -166,6 +172,7 @@
 
     <script>
         const music = document.getElementById('bgMusic');
+        const vceMusic = document.getElementById('vceMusic');
         const page3 = document.getElementById("page3");
         const typewriterElement = document.getElementById("typewriter");
         
@@ -179,7 +186,19 @@
             document.getElementById('page' + pageNumber).classList.add('active');
         }
 
+        // Function to go to page 2 and play vce.mp3
+        function goToPage2() {
+            showPage(2);
+            vceMusic.play().catch(e => console.log("Voice audio play blocked", e));
+        }
+
+        // Function to go to page 3, stop vce.mp3, and play aud.mp3
         function playMusicAndNext() {
+            // Stop page 2 audio
+            vceMusic.pause();
+            vceMusic.currentTime = 0;
+
+            // Play page 3 audio
             music.play().catch(e => console.log("Music play blocked", e));
             showPage(3);
             setTimeout(startTyping, 1000);
@@ -247,15 +266,12 @@ Happy Birthday🎉💝💙🍫`;
 
         function startTyping() {
             if (i < storyText.length) {
-                // চেক করা হচ্ছে ইউজার কি একদম নিচে আছে কি না (৫০ পিক্সেল বাফার সহ)
-                // যদি ইউজার উপরে স্ক্রল করে থাকে, তবে distanceToBottom ৫০ এর বেশি হবে
                 const distanceToBottom = page3.scrollHeight - page3.clientHeight - page3.scrollTop;
                 const shouldAutoScroll = distanceToBottom < 50;
 
                 typewriterElement.textContent += storyText.charAt(i);
                 i++;
                 
-                // শুধুমাত্র তখনই স্ক্রল করবে যদি ইউজার অলরেডি নিচে থাকে
                 if (shouldAutoScroll) {
                     page3.scrollTop = page3.scrollHeight;
                 }
