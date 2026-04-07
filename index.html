@@ -114,22 +114,24 @@
             margin-bottom: 30px;
         }
 
-        /* কয়েকটি লাইন করে রিভিল হওয়ার স্টাইল */
+        /* শুধু Fade-in ইফেক্ট */
         .story-chunk {
             font-size: 1.05rem;
             line-height: 1.9;
             color: #333;
             white-space: pre-wrap;
-            margin-bottom: 25px; /* প্যারাগ্রাফগুলোর মাঝের ফাঁকা স্থান */
-            opacity: 0;
-            transform: translateY(-20px); /* উপর থেকে নিচে নামবে */
-            transition: opacity 1.5s ease-out, transform 1.5s ease-out; /* স্মুথ এনিমেশন */
+            margin-bottom: 25px; 
+            opacity: 0; /* শুরুতে অদৃশ্য থাকবে */
         }
 
-        /* যখন জাভাস্ক্রিপ্ট দিয়ে show ক্লাস যোগ করা হবে */
+        /* show ক্লাস যুক্ত হলে এনিমেশন চলবে */
         .story-chunk.show {
-            opacity: 1;
-            transform: translateY(0);
+            animation: fadeIn 2.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
         }
 
         .line {
@@ -168,7 +170,6 @@
         </div>
 
         <div id="page3" class="page">
-            <!-- এই কন্টেইনারের ভেতরে গল্পগুলো প্যারাগ্রাফ আকারে আসবে -->
             <div id="story-container"></div>
             <div style="height: 150px;"></div>
         </div>
@@ -190,13 +191,11 @@
             }
         }
 
-        // ২য় পেজে যাওয়া এবং vce.mp3 প্লে হওয়া
         function goToPage2() {
             showPage(2);
             vceMusic.play().catch(e => console.log("Voice audio play blocked", e));
         }
 
-        // ৩য় পেজে যাওয়া, vce.mp3 বন্ধ হওয়া এবং aud.mp3 প্লে হওয়া
         function playMusicAndNext() {
             vceMusic.pause();
             vceMusic.currentTime = 0;
@@ -204,8 +203,8 @@
             music.play().catch(e => console.log("Music play blocked", e));
             showPage(3);
             
-            // ৮০০ মিলি সেকেন্ড পর গল্প রিভিল হওয়া শুরু হবে
-            setTimeout(startRevealing, 800);
+            // ৩য় পেজে আসার একটু পর এনিমেশন শুরু হবে
+            setTimeout(startRevealing, 500);
         }
 
         const storyText = `Hiii!!🙂
@@ -272,36 +271,26 @@ Happy Birthday🎉💝💙🍫`;
             const container = document.getElementById("story-container");
             container.innerHTML = '';
             
-            // স্পেস বা এন্টার এর উপর ভিত্তি করে গল্পটিকে ছোট ছোট অংশে ভাগ করা
             const paragraphs = storyText.split(/\n\s*\n/).filter(p => p.trim() !== '');
-            let i = 0;
+            
+            // সব প্যারাগ্রাফ একবারে DOM-এ যোগ করা হচ্ছে
+            paragraphs.forEach((text, i) => {
+                const p = document.createElement("div");
+                p.className = "story-chunk";
+                p.textContent = text.trim();
+                
+                // ওপর থেকে নিচে একটানা ফেড ইন হওয়ার জন্য সামান্য গ্যাপ (0.25s) সেট করা হলো
+                p.style.animationDelay = (i * 0.25) + "s"; 
+                
+                container.appendChild(p);
+            });
 
-            function showNext() {
-                if (i < paragraphs.length) {
-                    const p = document.createElement("div");
-                    p.className = "story-chunk";
-                    p.textContent = paragraphs[i].trim();
-                    container.appendChild(p);
-
-                    // এনিমেশন শুরু হওয়ার জন্য অল্প ট্রানজিশন ট্রিগার করা
-                    void p.offsetWidth;
-                    p.classList.add("show");
-
-                    // ইউজার যেন পড়তে পারে সেজন্য অটো-স্ক্রল (যদি ইউজার একেবারে উপরে বা মাঝে না থাকে)
-                    const distanceToBottom = page3.scrollHeight - page3.clientHeight - page3.scrollTop;
-                    if (distanceToBottom < 250) {
-                        page3.scrollTo({ top: page3.scrollHeight, behavior: 'smooth' });
-                    }
-
-                    // প্যারাগ্রাফের দৈর্ঘ্যের উপর নির্ভর করে পরবর্তী প্যারাগ্রাফ আসার সময় নির্ধারণ (যাতে পড়ার সময় পাওয়া যায়)
-                    const textLen = paragraphs[i].length;
-                    const delay = Math.min(Math.max(1500, textLen * 45), 5000); 
-
-                    i++;
-                    setTimeout(showNext, delay);
-                }
-            }
-            showNext();
+            // সামান্য বিরতির পর সব প্যারাগ্রাফে 'show' ক্লাস যোগ করা হচ্ছে
+            setTimeout(() => {
+                document.querySelectorAll('.story-chunk').forEach(chunk => {
+                    chunk.classList.add('show');
+                });
+            }, 50);
         }
     </script>
 </body>
