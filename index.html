@@ -98,6 +98,16 @@
             color: white;
         }
 
+        /* 1st page er nicher choto text er style */
+        .hint-text {
+            position: absolute;
+            bottom: 40px;
+            font-size: 0.75rem;
+            color: #999;
+            letter-spacing: 1px;
+            font-style: italic;
+        }
+
         #page3 {
             display: block;
             text-align: left;
@@ -163,6 +173,9 @@
             <div class="line"></div>
             <p>"The Day!"</p>
             <button class="btn" onclick="goToPage2()">Click to open</button>
+            
+            <!-- Choto hint text ekhane add kora hoyeche -->
+            <p class="hint-text">(touch anywhere first)</p>
         </div>
 
         <div id="page2" class="page">
