@@ -114,17 +114,15 @@
             margin-bottom: 30px;
         }
 
-        /* শুধু Fade-in ইফেক্ট */
         .story-chunk {
             font-size: 1.05rem;
             line-height: 1.9;
             color: #333;
             white-space: pre-wrap;
             margin-bottom: 25px; 
-            opacity: 0; /* শুরুতে অদৃশ্য থাকবে */
+            opacity: 0; 
         }
 
-        /* show ক্লাস যুক্ত হলে এনিমেশন চলবে */
         .story-chunk.show {
             animation: fadeIn 2.5s ease-in-out forwards;
         }
@@ -143,6 +141,11 @@
     </style>
 </head>
 <body>
+
+    <!-- 1st and 2nd Page Audio (bdy.mp3) -->
+    <audio id="bdyMusic" loop>
+        <source src="bdy.mp3">
+    </audio>
 
     <!-- 3rd Page Audio -->
     <audio id="bgMusic" loop>
@@ -178,7 +181,15 @@
     <script>
         const music = document.getElementById('bgMusic');
         const vceMusic = document.getElementById('vceMusic');
+        const bdyMusic = document.getElementById('bdyMusic');
         const page3 = document.getElementById("page3");
+
+        // স্ক্রিনের যেকোনো জায়গায় প্রথমবার টাচ করলেই bdy.mp3 শুরু হবে (Autoplay bypass করার জন্য)
+        document.body.addEventListener('click', function() {
+            if (bdyMusic.paused && !document.getElementById('page3').classList.contains('active')) {
+                bdyMusic.play().catch(e => console.log("bdyMusic autoplay blocked", e));
+            }
+        }, { once: true });
 
         function showPage(pageNumber) {
             document.querySelectorAll('.page').forEach(page => {
@@ -193,13 +204,24 @@
 
         function goToPage2() {
             showPage(2);
+            // যদি ইউজার স্ক্রিনে টাচ না করেই সরাসরি বাটনে ক্লিক করে, তবে নিশ্চিত করা হচ্ছে যেন bdy.mp3 বাজে
+            if (bdyMusic.paused) {
+                bdyMusic.play().catch(e => console.log("bdy audio play blocked", e));
+            }
+            // ২য় পেজের ভয়েস প্লে হবে (bdy.mp3 বন্ধ হবে না)
             vceMusic.play().catch(e => console.log("Voice audio play blocked", e));
         }
 
         function playMusicAndNext() {
+            // ২য় পেজের vce.mp3 থামানো হচ্ছে
             vceMusic.pause();
             vceMusic.currentTime = 0;
 
+            // bdy.mp3 থামানো হচ্ছে (যেহেতু ৩য় পেজ চলে আসবে)
+            bdyMusic.pause();
+            bdyMusic.currentTime = 0;
+
+            // ৩য় পেজের মিউজিক চালু করা হচ্ছে
             music.play().catch(e => console.log("Music play blocked", e));
             showPage(3);
             
@@ -273,19 +295,16 @@ Happy Birthday🎉💝💙🍫`;
             
             const paragraphs = storyText.split(/\n\s*\n/).filter(p => p.trim() !== '');
             
-            // সব প্যারাগ্রাফ একবারে DOM-এ যোগ করা হচ্ছে
             paragraphs.forEach((text, i) => {
                 const p = document.createElement("div");
                 p.className = "story-chunk";
                 p.textContent = text.trim();
                 
-                // ওপর থেকে নিচে একটানা ফেড ইন হওয়ার জন্য সামান্য গ্যাপ (0.25s) সেট করা হলো
                 p.style.animationDelay = (i * 0.25) + "s"; 
                 
                 container.appendChild(p);
             });
 
-            // সামান্য বিরতির পর সব প্যারাগ্রাফে 'show' ক্লাস যোগ করা হচ্ছে
             setTimeout(() => {
                 document.querySelectorAll('.story-chunk').forEach(chunk => {
                     chunk.classList.add('show');
