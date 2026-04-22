@@ -153,16 +153,19 @@
 <body>
 
     <!-- 1st and 2nd Page Audio (bdy.mp3) -->
+    <!-- এটি লুপ হবে কারণ এতে loop অ্যাট্রিবিউট আছে -->
     <audio id="bdyMusic" loop>
         <source src="bdy.mp3">
     </audio>
 
     <!-- 3rd Page Audio -->
-    <audio id="bgMusic" loop>
+    <!-- এখান থেকে loop অ্যাট্রিবিউট সরিয়ে দেওয়া হয়েছে যেন একবার প্লে হয়ে থেমে যায় -->
+    <audio id="bgMusic">
         <source src="aud.mp3">
     </audio>
 
     <!-- 2nd Page Audio -->
+    <!-- এটিতেও loop নেই, তাই একবার প্লে হয়ে থেমে যাবে -->
     <audio id="vceMusic">
         <source src="vce.mp3">
     </audio>
