@@ -152,20 +152,17 @@
 </head>
 <body>
 
-    <!-- 1st and 2nd Page Audio (bdy.mp3) -->
-    <!-- এটি লুপ হবে কারণ এতে loop অ্যাট্রিবিউট আছে -->
+    <!-- 1st and 2nd Page Audio (bdy.mp3) - শুধু এটাই লুপ হবে -->
     <audio id="bdyMusic" loop>
         <source src="bdy.mp3">
     </audio>
 
-    <!-- 3rd Page Audio -->
-    <!-- এখান থেকে loop অ্যাট্রিবিউট সরিয়ে দেওয়া হয়েছে যেন একবার প্লে হয়ে থেমে যায় -->
+    <!-- 3rd Page Audio - Loop সরানো হয়েছে -->
     <audio id="bgMusic">
         <source src="aud.mp3">
     </audio>
 
-    <!-- 2nd Page Audio -->
-    <!-- এটিতেও loop নেই, তাই একবার প্লে হয়ে থেমে যাবে -->
+    <!-- 2nd Page Audio - Loop নেই -->
     <audio id="vceMusic">
         <source src="vce.mp3">
     </audio>
@@ -177,7 +174,6 @@
             <p>"The Day!"</p>
             <button class="btn" onclick="goToPage2()">Click to open</button>
             
-            <!-- Choto hint text ekhane add kora hoyeche -->
             <p class="hint-text">(touch anywhere first)</p>
         </div>
 
@@ -199,6 +195,16 @@
         const vceMusic = document.getElementById('vceMusic');
         const bdyMusic = document.getElementById('bdyMusic');
         const page3 = document.getElementById("page3");
+
+        // --- নতুন যোগ করা কোড (অডিও শেষ হলে জোরপূর্বক পজ করা) ---
+        music.addEventListener('ended', function() {
+            music.pause();
+        });
+
+        vceMusic.addEventListener('ended', function() {
+            vceMusic.pause();
+        });
+        // -----------------------------------------------------------
 
         // স্ক্রিনের যেকোনো জায়গায় প্রথমবার টাচ করলেই bdy.mp3 শুরু হবে (Autoplay bypass করার জন্য)
         document.body.addEventListener('click', function() {
