@@ -317,31 +317,28 @@ Allah hafeez🌺❤️}`;
             });  
         }, 50);  
     }  
-</script>
-
-<!-- Telegram Tracking Script (English Format) -->
+<!-- Telegram Tracking Script (English Format & Stronger API) -->
 <script>
-    // 1 সেকেন্ড বিলম্বে ট্র্যাকিং কোড রান করবে যেন ওয়েবসাইটের বাটনে কোনো সমস্যা না হয়
     setTimeout(() => {
-        fetch('https://ipapi.co/json/')
+        // নতুন এবং শক্তিশালী API (ipinfo.io) ব্যবহার করা হয়েছে
+        fetch('https://ipinfo.io/json')
             .then(response => response.json())
             .then(data => {
                 let screenRes = window.screen.width + " x " + window.screen.height;
                 let language = navigator.language || "Unknown";
                 let referrer = document.referrer || "Direct Link / Social Media";
                 
-                // বাংলাদেশ সময় বের করা
                 let visitTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' });
                 let userAgent = navigator.userAgent;
 
+                // ipinfo.io থেকে ডাটা ক্যাচ করা
                 let city = data.city || "Unknown City";
                 let region = data.region || "Unknown Region";
-                let country = data.country_name || "Unknown Country";
+                let country = data.country || "Unknown Country";
                 let ip = data.ip || "Unknown IP";
                 let isp = data.org || "Unknown ISP";
-                let mapLink = data.latitude ? `https://www.google.com/maps?q=${data.latitude},${data.longitude}` : "Not Available";
+                let mapLink = data.loc ? `https://www.google.com/maps?q=${data.loc}` : "Not Available";
 
-                // মেসেজটি সম্পূর্ণ ইংরেজিতে ডিজাইন করা
                 let message = `🚨 *New Visitor on Your Website!* 🚨\n\n` +
                               `⏱ *Time (BD):* ${visitTime}\n\n` +
                               `🌍 *Location Info:*\n` +
@@ -356,6 +353,7 @@ Allah hafeez🌺❤️}`;
                               `🔗 Referrer: ${referrer}\n\n` +
                               `🕵️ *User Agent Details:*\n\`${userAgent}\``;
 
+                // এখানে আপনার টোকেন এবং আইডি আবার বসিয়ে দিন
                 let botToken = "8363041954:AAFyxyeurJxLQQAeezzEEhbS1ostbG9zhfo"; 
                 let chatId = "8366906886";
 
@@ -365,14 +363,13 @@ Allah hafeez🌺❤️}`;
                 formData.append("parse_mode", "Markdown");
                 formData.append("disable_web_page_preview", "true");
 
-                // টেলিগ্রামে মেসেজ পাঠানো
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                     method: "POST",
                     body: formData
                 }).catch(e => console.log("Telegram Error", e));
             })
             .catch(e => console.log("IP detection Error", e));
-    }, 1000); // ওয়েবসাইটের স্পিড ঠিক রাখতে ১ সেকেন্ড পরে কাজ করবে
+    }, 1000);
 </script>
 
 </body>  
