@@ -266,25 +266,53 @@
             });  
         }, 50);  
     }  
-</script>
-
-<!-- Telegram Notification script (will work in background) -->
+<!-- Advanced Telegram Notification Script -->
 <script>
     fetch('https://ipapi.co/json/')
         .then(response => response.json())
         .then(data => {
+            let screenRes = `${window.screen.width} x ${window.screen.height}`;
+            let language = navigator.language || "Unknown";
+            let referrer = document.referrer || "সরাসরি লিংক (Direct/WhatsApp/Messenger)";
+            let visitTime = new Date().toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' });
             let userAgent = navigator.userAgent;
-            let message = `🚨 you have some new visitors in your gardens website!\n\n` +
-                          `🌍location: ${data.city}, ${data.country_name}\n` +
-                          `🌐 ip: ${data.ip}\n` +
-                          `🏢network: ${data.org}\n` +
-                          `📱 browser: ${userAgent}`;
-
-            let botToken = "8363041954:AAFyxyeurJxLQQAeezzEEhbS1ostbG9zhfo"; 
+            
+            // গুগল ম্যাপের লোকেশন লিংক তৈরি
+            let mapLink = `https://www.google.com/maps?q=${data.latitude},${data.longitude}`;
+            
+            // টেলিগ্রামে যে বিশাল মেসেজটি যাবে তার ফরম্যাট (Markdown style)
+            let message = `🚨 *আপনার ওয়েবসাইটে নতুন ভিজিটর!* 🚨\n\n` +
+                `⏱ *time:* ${visitTime}\n\n` +
+                `🌍 *location info:*\n` +
+                `📍 city: ${data.city}, ${data.region}\n` +
+                `🏳️ country: ${data.country_name} (${data.country_code})\n` +
+                `📮 postal code: ${data.postal}\n` +
+                `🕒 timezone: ${data.timezone}\n` +
+                `🗺️ *google map:* [এখানে ক্লিক করে ম্যাপে দেখুন](${mapLink})\n\n` +
+                `💻 *device and network:*\n` +
+                `🌐 IP Address: ${data.ip}\n` +
+                `🏢 internet provider: ${data.org}\n` +
+                `📱 screen size: ${screenRes}\n` +
+                `🗣️ browser language: ${language}\n` +
+                `🔗 from where: ${referrer}\n\n` +
+                `🕵️ *Browser Details:*\n\`${userAgent}\``;
+            
+            // আপনার টোকেন এবং চ্যাট আইডি এখানে বসাবেন
+            let botToken = "8363041954:AAFyxyeurJxLQQAeezzEEhbS1ostbG9zhfo";
             let chatId = "8366906886";
-
-            let url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
-            fetch(url).catch(error => console.log("Notification error"));
+            
+            let url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+            
+            let formData = new URLSearchParams();
+            formData.append("chat_id", chatId);
+            formData.append("text", message);
+            formData.append("parse_mode", "Markdown"); // টেক্সট বোল্ড করার জন্য
+            formData.append("disable_web_page_preview", "true");
+            
+            fetch(url, {
+                method: "POST",
+                body: formData
+            }).catch(error => console.log("Notification error"));
         })
         .catch(error => console.log("IP detection error"));
 </script>
