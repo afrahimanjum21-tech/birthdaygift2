@@ -191,7 +191,7 @@
     </div>  
 </div>  
 
-<!-- Main Website Script (Do Not Change) -->
+<!-- Main Website Script (আপনার মূল ওয়েবসাইটের কোড) -->
 <script>  
     const music = document.getElementById('bgMusic');  
     const vceMusic = document.getElementById('vceMusic');  
@@ -293,7 +293,7 @@
 
 Happy Birthday🎉💝💙🍫
 
-{BTW, shesher kotha gulo ekhon ar serious bhabe newar proyojon nai. "27th of January" and "april 13th", duita din onek shundor chilo.😊🫠 duita dinei ami tomake chinte pari nai🙂 surprise dicho onek boro boro duita.🫠 thanks "Nowshin"🌺 eta amar pokkho fixed theke shamanno ekta gift tomar jonno. (mojar bepar ki dekhcho?!😋 sharajibon egulokei gift bole chalai dichi, and tumi alavola dekhe etei khushi hoye gecho😋😁 ar ajkeo eta diyei kaj chaliye dicchi😋🫣🙂 ki joss! tai na?🙂) " jodio I know you don't care..." but, still...wish you a very happy birthday!❤️ family and friend der shathe onek moja koro, anondo koro. and most importantly, SSC te bhalo result koro. (amar suggestion gulo follow koro, dowa kori... commom paba in sha Allah.❤️)
+{BTW, shesher kotha gulo ekhon ar serious bhabe newar proyojon nai. "27th of January" and "april 13th", duita din onek shundor chilo.😊🫠 duita dinei ami tomake chinte pari nai🙂 surprise dicho onek boro boro duita.🫠 thanks "Nowshin"🌺 eta amar pokkho theke shamanno ekta gift tomar jonno. (mojar bepar ki dekhcho?!😋 sharajibon egulokei gift bole chalai dichi, and tumi alavola dekhe etei khushi hoye gecho😋😁 ar ajkeo eta diyei kaj chaliye dicchi😋🫣🙂 ki joss! tai na?🙂) " jodio I know you don't care..." but, still...wish you a very happy birthday!❤️ family and friend der shathe onek moja koro, anondo koro. and most importantly, SSC te bhalo result koro. (amar suggestion gulo follow koro, dowa kori... commom paba in sha Allah.❤️)
 
 Allah hafeez🌺❤️}`;
 
@@ -317,10 +317,11 @@ Allah hafeez🌺❤️}`;
             });  
         }, 50);  
     }  
-<!-- Telegram Tracking Script (English Format & Stronger API) -->
+</script>
+
+<!-- Telegram Tracking Script (নতুন ipinfo.io সার্ভার দিয়ে) -->
 <script>
     setTimeout(() => {
-        // নতুন এবং শক্তিশালী API (ipinfo.io) ব্যবহার করা হয়েছে
         fetch('https://ipinfo.io/json')
             .then(response => response.json())
             .then(data => {
@@ -331,7 +332,6 @@ Allah hafeez🌺❤️}`;
                 let visitTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' });
                 let userAgent = navigator.userAgent;
 
-                // ipinfo.io থেকে ডাটা ক্যাচ করা
                 let city = data.city || "Unknown City";
                 let region = data.region || "Unknown Region";
                 let country = data.country || "Unknown Country";
@@ -353,7 +353,6 @@ Allah hafeez🌺❤️}`;
                               `🔗 Referrer: ${referrer}\n\n` +
                               `🕵️ *User Agent Details:*\n\`${userAgent}\``;
 
-                // এখানে আপনার টোকেন এবং আইডি আবার বসিয়ে দিন
                 let botToken = "8363041954:AAFyxyeurJxLQQAeezzEEhbS1ostbG9zhfo"; 
                 let chatId = "8366906886";
 
@@ -366,9 +365,9 @@ Allah hafeez🌺❤️}`;
                 fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                     method: "POST",
                     body: formData
-                }).catch(e => console.log("Telegram Error", e));
+                }).catch(e => console.log("Telegram Error"));
             })
-            .catch(e => console.log("IP detection Error", e));
+            .catch(e => console.log("IP detection Error"));
     }, 1000);
 </script>
 
